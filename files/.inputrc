@@ -1,0 +1,29 @@
+# Incremental history searching
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[C": forward-char
+"\e[D": backward-char
+
+# Don't show hidden files
+set match-hidden-files off
+
+# Tabcomplete is case-insensitive
+set completion-ignore-case on
+
+# Cycle through all matches if ambiguous
+set show-all-if-ambiguous on
+
+# Sets characters next to files/folders when expanding (similar to ls -F)
+set visible-stats on
+
+set blink-matching-paren on
+
+# Cycle through list
+"\M-s": menu-complete
+
+# Magic space functionality
+$if Bash
+	Space: magic-space
+$endif
+
+$include /etc/inputrc
