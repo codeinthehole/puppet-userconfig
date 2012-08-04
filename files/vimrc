@@ -1,0 +1,212 @@
+" ==================================================
+" VIMRC file for David Winterbottom (@codeinthehole)
+" ==================================================
+
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible
+
+" Switch syntax highlighting on, when the terminal has colors
+if &t_Co > 2 || has("syntax")
+    syntax on
+endif
+
+filetype indent plugin on                     " Turn on filetype detection
+
+let mapleader = ","
+let g:mapleader = ","
+
+" Editing behaviour
+set backspace=indent,eol,start          " Allow backspacing over everything in insert mode
+set scrolloff=3                         " Scroll when cursor is within 3 lines of page top/bottom
+set showmatch                           " Show matching delimiters
+set noshowmode                          " Don't show mode changes
+set matchtime=1                         " Jump to matching bracket for 2/10ths of a second
+set autoindent                          " Always set autoindenting on
+set si                                  " Smart indenting
+set nowrap                              " Don't word wrap
+set expandtab                           " Expand tabs into space
+set tabstop=4                           " Length of tab
+set shiftwidth=4
+set softtabstop=4
+set shiftround                          " Round indent to multiple of 'shiftwidth'
+set smarttab                            " Allow backspacing of a shiftwidth of spaces
+set binary noeol                        " Prevent a carriage return at end of last line
+set lazyredraw							" Don't redraw while executing macros (for performance)
+
+" Command line behaviour
+set completeopt=menu,longest,preview    " Insert mode completion options
+set history=1000                        " Number of lines in command line history
+set showcmd                             " Display incomplete commands
+set wildmenu                            " Use menu to show command line completions
+set wildmode=list:longest,full          " Command-line completion
+set shellslash                          " A forward slash is used when expanding filenames
+set cmdheight=2                         " Try and avoid the dreaded "press <Enter> to continue" by setting the 
+
+" Status bar
+set showmode                            " Display which mode we're in
+set laststatus=2                        " Always show status bar
+
+" Appearance
+set ruler                               " Show the cursor position all the time in the status bar
+set pastetoggle=<F11>                   " Toggle paste mode using F11
+set number                              " Line numbers
+set confirm                             " Prompt for unsaved files
+set title                               " Set window title to filename
+let &titleold=""
+
+" Misc
+set enc=utf-8                           " Use UTF-8 as the default buffer encoding
+set t_RV=                               " Don't request terminal version string
+set mouse=a                             " Enables use of mouse in all modes
+set mousehide                           " Hide mouse when typing
+set grepprg=grep\ -nH\ $*               " GREP program to use
+set ttyfast                             " Faster output
+
+" Display
+set shortmess=atI                       " Prevent file messages appearing
+set visualbell                          " Rather than beeps
+set virtualedit=block
+
+" Files/buffers
+set hidden                              " Don't abandon unloaded buffers
+set fileformats=unix                    " File format
+set autowrite                           " Auto-write file if modified on exit
+set autoread                            " Auto-load file if it changes elsewhere
+set nobackup                            " Don't keep a back-up file, they're annoying
+
+" Searching
+set wrapscan                            " Wrap searching
+set incsearch                           " Do incremental searching
+set hlsearch                            " Highlight all search results (sometimes annoying)
+set gdefault                            " Global setting on by default in subsituting
+set ignorecase smartcase                " Smart search behaviour
+set magic
+
+" History - keep undo history between sessions
+if has('persistent_undo')
+	set undofile
+	set undodir=$HOME/.VIM_UNDO_FILES
+	set undolevels=2000
+endif
+
+" =============
+" ABBREVIATIONS
+" =============
+
+" Auto-correct common typos
+
+iabbrev si is
+iabbrev tehn then
+
+" ===============
+" CUSTOM MAPPINGS
+" ===============
+
+" INSERT MODE
+" -----------
+
+" Alias for escape - see http://cloudhead.io/2010/04/24/staying-the-hell-out-of-insert-mode/
+inoremap kj <ESC>
+inoremap <ESC> <NOP>
+
+" No more cursor keys!
+inoremap <Left>  <NOP>
+inoremap <Right> <NOP>
+inoremap <Up>    <NOP>
+inoremap <Down>  <NOP>
+
+" Delete line
+inoremap <C-d> <ESC>ddi
+inoremap <C-e> <ESC>A
+inoremap <C-a> <ESC>I
+inoremap ,, <ESC>:wq<CR>
+
+" NORMAL MODE
+" -----------
+
+" Faster saving and quiting
+nnoremap <leader>w :w!<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <leader>x :xa<CR>
+
+" Space is pager
+nnoremap <Space> <PageDown>
+
+" Change to current directory
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
+
+" Toggle paste mode
+nnoremap <leader>pp :setlocal paste!<CR>
+
+" Sort paragraph under cursor (useful for python imports)
+nnoremap <leader>s vip : !sort<CR>
+
+" Format XML - using my own python script for formatting XML
+" See https://gist.github.com/3181820
+nnoremap <leader>f ggVG !xmlformat<CR>
+
+" Typos
+nmap :W :w                  
+nmap :E :e
+nmap :Q :q
+
+" Use backspace to turn off highlighted search terms
+nnoremap <BS> :nohlsearch<CR>
+
+" Diff behaviour
+nnoremap <Leader>u :diffupdate<cr>
+nnoremap <Leader>g :diffget<cr>
+nnoremap <Leader>p :diffput<cr>
+set diffopt+=iwhite
+
+" Quick file access
+nnoremap ,h :help<SPACE>
+
+" VISUAL MODE
+" -----------
+
+" When in visual mode, retain visual selection after action
+vmap <expr> > ShiftAndKeepVisualSelection(">") 
+vmap <expr> < ShiftAndKeepVisualSelection("<")
+function! ShiftAndKeepVisualSelection(cmd) 
+	set nosmartindent
+	if mode() =~ '[Vv]'
+		return a:cmd . ":set smartindent\<CR>gv" 
+	else
+		return a:cmd . ":set smartindent\<CR>"
+	endif 
+endfunction
+
+" Jump between search matches when using helpgrep
+nmap <silent> <RIGHT> :cnext<CR>
+nmap <silent> <RIGHT><RIGHT> :cnfile<CR><C-G> nmap <silent> <LEFT> :cprev<CR>
+nmap <silent> <LEFT><LEFT> :cpfile<CR><C-G>
+
+" AUTOCOMMANDS
+" ------------
+
+" Delete trailing whitespace when saving python files
+autocmd BufWrite *.py :call DeleteTrailingWS()
+function! DeleteTrailingWS()
+	exe "normal mz"
+	%s/\s\+$//ge
+	exe "normal `z"
+endfunction
+ 
+" Auto-source vimrc after save
+augroup VimReload
+	autocmd!
+	autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END
+
+" Open help in its own window
+augroup HelpInTabs
+	autocmd!
+	autocmd BufEnter *.txt call HelpInNewTab()
+augroup END
+function! HelpInNewTab ()
+	if &buftype == 'help'
+		execute "normal \<C-W>T"
+	endif
+endfunction

@@ -1,11 +1,15 @@
 class bash ($user='vagrant') {
-	file {"/home/$vagrant/.bashrc":
+	file {"/home/$user/.bashrc":
 		ensure => present,
-		source => "puppet:///modules/bash/.bashrc",
+		source => "puppet:///modules/bash/bashrc",
 	}
-	file {"/home/$vagrant/.inputrc":
+	file {"/home/$user/.inputrc":
 		ensure => present,
-		source => "puppet:///modules/bash/.inputrc",
+		source => "puppet:///modules/bash/inputrc",
+	}
+	file {"/home/$user/.vimrc":
+		ensure => present,
+		source => "puppet:///modules/bash/vimrc",
 	}
 	package {"vim":
 		ensure => present,
