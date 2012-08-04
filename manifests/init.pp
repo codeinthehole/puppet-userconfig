@@ -1,21 +1,21 @@
 class bash ($user='vagrant') {
 	file {"/home/$user/.bashrc":
 		ensure => present,
-		source => "puppet:///modules/bash/bashrc",
+		source => "puppet:///modules/userconfig/bashrc",
 	}
 }
 
 class readline ($user='vagrant') {
 	file {"/home/$user/.inputrc":
 		ensure => present,
-		source => "puppet:///modules/bash/inputrc",
+		source => "puppet:///modules/userconfig/inputrc",
 	}
 }
 
 class vim ($user='vagrant') {
 	file {"/home/$user/.vimrc":
 		ensure => present,
-		source => "puppet:///modules/bash/vimrc",
+		source => "puppet:///modules/userconfig/vimrc",
 	}
 	package {"vim":
 		ensure => present,
@@ -23,5 +23,5 @@ class vim ($user='vagrant') {
 }
 
 class userconfig($user='vagrant') {
-	include userconfig::bash, userconfig::readline, userconfig::vim
+	include bash, readline, vim
 }
