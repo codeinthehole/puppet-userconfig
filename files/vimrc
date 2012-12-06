@@ -108,13 +108,6 @@ iabbrev tehn then
 
 " Alias for escape - see http://cloudhead.io/2010/04/24/staying-the-hell-out-of-insert-mode/
 inoremap kj <ESC>
-inoremap <ESC> <NOP>
-
-" No more cursor keys!
-inoremap <Left>  <NOP>
-inoremap <Right> <NOP>
-inoremap <Up>    <NOP>
-inoremap <Down>  <NOP>
 
 " Delete line
 inoremap <C-d> <ESC>ddi
